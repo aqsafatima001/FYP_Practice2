@@ -9,7 +9,7 @@
 
         <p>Don't have an account?</p>
         <div class="Button-Container2">
-            <router-link to="/user-register" class="button">Register as User</router-link>
+            <router-link to="/UserRegistration" class="button">Register as User</router-link>
             <router-link to="/admin-register" class="button">Register as Admin</router-link>
         </div>
 
