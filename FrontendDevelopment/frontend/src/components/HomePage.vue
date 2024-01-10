@@ -1,7 +1,15 @@
+<script setup>
+import Header from "./../components/Header.vue"
+import Footer from "./../components/Footer.vue"
+</script>
+
 <template>
+   
+<div>
+    <Header/>
     <div class="container1">
         <h1>Welcome to NCP Big Data Facility</h1>
-
+        
         <div class="Button-Container1">
             <router-link to="/userlogin" class="button">Login as User</router-link>
             <router-link to="/adminlogin" class="button">Login as Admin</router-link>
@@ -12,8 +20,10 @@
             <router-link to="/UserRegistration" class="button">Register as User</router-link>
             <router-link to="/admin-register" class="button">Register as Admin</router-link>
         </div>
-
+        
     </div>
+    <Footer/>
+</div>
 </template>
   
 <style>
@@ -28,7 +38,6 @@ h1{
     align-items: center;
     align-content: center;
     padding-top: 50px;
-    border: 2px solid black;
     margin-top: auto;
     height: 85vh;
     

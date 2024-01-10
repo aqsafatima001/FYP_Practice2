@@ -60,7 +60,7 @@ export default {
     </div>
 </template>
   
-<style>
+<style scoped>
 .grid-container {
     display: grid;
     grid-template-columns: 1fr 5fr;
@@ -160,7 +160,6 @@ export default {
     text-align: center;
     background-color: #27496D;
     color: white;
-    border-radius: 8px;
     font-weight: bold;
 }
 
@@ -171,7 +170,6 @@ export default {
     text-align: center;
     background-color: rgb(137, 207, 240);
     color: white;
-    border-radius: 8px;
     font-weight: bold;
 }
 

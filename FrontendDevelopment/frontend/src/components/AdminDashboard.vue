@@ -22,27 +22,21 @@ export default {
             </div>
 
             <div class="header-items">
-                <div class="header-item">Dashboard</div>
+                <!-- <div class="header-item">Dashboard</div>
                 <div class="header-item">Services</div>
                 <div class="header-item">Alerts</div>
-                <div class="header-item">Stack Version</div>
+                <div class="header-item">Stack Version</div> -->
             </div>
         </div>
 
         <div class="grid-item sidebar">
             <ul class="sidebar_list">
-                <li>HDFS</li>
-                <li>YARN</li>
-                <li>MapReduce</li>
-                <li>Hive</li>
-                <li>Spark</li>
-                <li>Pig</li>
-                <li>Sqoop</li>
-                <li>Zookeeper</li>
-                <li>Hbase</li>
-                <li>Kafka</li>
-                <li>Flume</li>
-                <li>Storm</li>
+                <li>Cluster Management</li>
+                <li>Cluster Information</li>
+                <li>User Activity</li>
+                <li>Views</li>
+                <li>Stack Management</li>
+                <li>Cluster Health and Status</li>
             </ul>
         </div>
 
@@ -60,7 +54,7 @@ export default {
     </div>
 </template>
   
-<style>
+<style scoped>
 .grid-container {
     display: grid;
     grid-template-columns: 1fr 5fr;
@@ -154,24 +148,22 @@ export default {
 }
 
 .sidebar_list li {
-    padding: 3px 4px;
+    padding: 12px 2px;
     margin: 3px 4px;
     width: 200px;
     text-align: center;
     background-color: #27496D;
     color: white;
-    border-radius: 8px;
     font-weight: bold;
 }
 
 .sidebar_list li:hover {
-    padding: 3px 4px;
+    padding: 12px 2px;
     margin: 3px 4px;
     width: 200px;
     text-align: center;
     background-color: rgb(137, 207, 240);
     color: white;
-    border-radius: 8px;
     font-weight: bold;
 }
 

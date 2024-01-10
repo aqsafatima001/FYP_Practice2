@@ -81,7 +81,7 @@ export default {
                         console.log("ERROR: ", data.message)
                     } else {
                         console.log(data)
-                        this.$router.push('/next-page');
+                        this.$router.push('/userdashboard');
                     }
                 })
                 .catch((error) => {

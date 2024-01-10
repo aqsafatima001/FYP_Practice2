@@ -5,6 +5,8 @@ import AdminLogin from "./../components/AdminLogin.vue"
 import NextPage from "./../components/NextPage.vue"
 import HomePage from "./../components/HomePage.vue"
 import UserRegistration from "./../components/UserRegistration.vue"
+import UserDashboard from "./../components/UserDashboard.vue"
+import AdminDashboard from "./../components/AdminDashboard.vue"
 // import HomePage from "./..components/HomePage.vue"
 // import Login from "./../components/Login.vue"
 
@@ -35,6 +37,16 @@ const router  = createRouter({
             path:"/next-page",
             name:"NextPage",
             component: NextPage
+        },
+        {
+            path:"/userdashboard",
+            name:"UserDashboard",
+            component: UserDashboard
+        },
+        {
+            path:"/admindashboard",
+            name:"AdminDashboard",
+            component: AdminDashboard
         }
     ]
 })
