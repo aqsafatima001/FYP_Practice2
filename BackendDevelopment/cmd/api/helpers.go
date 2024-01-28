@@ -70,29 +70,6 @@ func (app *application) errorJSON(w http.ResponseWriter, err error, status ...in
 }
 
 // -------------- ERROR FUNCTION ------------
-func (app *application) sendMailSimple() {
-	auth := smtp.PlainAuth(
-		"",
-		"aqsafatima0202@gmail.com",
-		"bgyn xcsk yfeb ajkz",
-		"smtp.gmail.com",
-	)
-
-	msg := "Subject : My special subject\nThis is the body of my email."
-
-	err := smtp.SendMail(
-		"smtp.gmail.com:587",
-		auth,
-		"aqsafatima0202@gmail.com",
-		[]string{"aqsafatima0202@gmail.com"},
-		[]byte(msg),
-	)
-
-	if err != nil {
-		fmt.Printf("Error: ", err)
-	}
-}
-
 func (app *application) generateOTP() (string, error) {
 	// Generate random bytes (should be enough for a 6-digit OTP)
 	randomBytes := make([]byte, 4)
@@ -113,27 +90,17 @@ func (app *application) sendEmailWithOTP(email, otp string) error {
 		"bgyn xcsk yfeb ajkz",
 		"smtp.gmail.com",
 	)
-
 	// Compose the email message
-	// to := []string{email}
 	msg := []byte("To: " + email + "\r\n" +
 		"Subject: OTP Verification\r\n" +
 		"\r\n" +
 		"Your OTP for registration is: " + otp + "\r\n")
-
-	// Send the email
-	// err := smtp.SendMail(
-	// 	"smtp.example.com:587",
-	// 	auth,
-	// 	"aqsafatima0202@gmail.com",
-	// 	to,
-	// 	msg,
-	// )
+	to := email
 	err := smtp.SendMail(
 		"smtp.gmail.com:587",
 		auth,
 		"aqsafatima0202@gmail.com",
-		[]string{"aqsafatima0202@gmail.com"},
+		[]string{to},
 		[]byte(msg),
 	)
 	if err != nil {

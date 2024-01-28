@@ -49,7 +49,15 @@ export default {
 
         if (response.status === 201) {
           // Registration successful, redirect to email verification page
-          this.$router.push('/OtpVerification');
+          // this.$router.push('/OtpVerification');
+          this.$router.push({
+            name: 'OtpVerification',
+            query: {
+              email: this.formData.email,
+              password: this.formData.password,
+              username: this.formData.username,
+            },
+          });
         } else {
           if (response.headers.get('content-type').indexOf('application/json') === -1) {
             // Response is not JSON, handle it accordingly

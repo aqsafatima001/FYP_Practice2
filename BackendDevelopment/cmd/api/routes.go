@@ -32,11 +32,14 @@ func (app *application) routes() http.Handler {
 	mux.Post("/api/adminlogin", app.AdminloginAPI)
 
 	// USER REGISTRATION REQUESTS
-	mux.Get("/api/user-registration", app.serveUserRegistrationPage)
-	mux.Post("/api/user-registration", app.registerUser)
+	// mux.Get("/api/user-registration", app.serveUserRegistrationPage)
+	// mux.Post("/api/user-registration", app.registerUser)
 
 	//OTP-Working
 	mux.Get("/api/otp-verfication", app.OTP_verfication)
 	mux.Post("/api/otp-verfication", app.OTP_verfication)
+
+	mux.Get("/api/verify-otp", app.VerifyOTP)
+	mux.Post("/api/verify-otp", app.VerifyOTP)
 	return mux
 }
