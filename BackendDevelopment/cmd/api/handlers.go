@@ -2,12 +2,29 @@ package main
 
 import (
 	"database/sql"
+	"encoding/json"
+	"log"
 	"net/http"
 )
 
 // jsonResponse is the type used for generic JSON responses
 type jsonResponse struct {
 	Error   bool   `json:"error"`
+	Message string `json:"message"`
+}
+
+type RegistrationData struct {
+	Username string `json:"username"`
+	Email    string `json:"email"`
+	Password string `json:"password"`
+}
+
+// Define a struct for the response
+type RegistrationResponse struct {
+	Message string `json:"message"`
+}
+
+type Response struct {
 	Message string `json:"message"`
 }
 
@@ -144,4 +161,63 @@ func (app *application) AdminloginAPI(w http.ResponseWriter, r *http.Request) {
 }
 func (app *application) serveLogin(w http.ResponseWriter, r *http.Request) {
 
+}
+
+func (app *application) serveUserRegistrationPage(w http.ResponseWriter, r *http.Request) {
+	// Implement the logic to serve the user registration page.
+	// This could be an HTML page or a Vue.js frontend.
+}
+
+func (app *application) registerUser(w http.ResponseWriter, r *http.Request) {
+
+	// otp, err_otp := app.generateOTP()
+	// if err_otp != nil {
+	// 	fmt.Println("Error generating OTP:", err_otp)
+	// 	return
+	// }
+	// fmt.Println("Generated OTP:", otp)
+	// // app.sendMailSimple()
+	// app.sendEmailWithOTP("aqsafatima0202@gmail.com", otp)
+
+	// Parse the JSON data sent from the frontend
+	var formData struct {
+		Username string `json:"username"`
+		Email    string `json:"email"`
+		Password string `json:"password"`
+	}
+	decoder := json.NewDecoder(r.Body)
+	if err := decoder.Decode(&formData); err != nil {
+		http.Error(w, "Invalid request data", http.StatusBadRequest)
+		return
+	}
+
+	// Hash the user's password (you should use a strong password hashing library)
+	// For example, you can use the "bcrypt" library for secure password hashing
+	// Here's a simplified example (not recommended for production):
+	hashedPassword := formData.Password // Replace with actual hashing logic
+
+	// Insert the user's information into the database
+	query := `
+        INSERT INTO User_Registration_test (Username, Email, PasswordHash)
+        VALUES (@p1, @p2, @p3)
+    `
+	_, err := app.db.Exec(query, formData.Username, formData.Email, hashedPassword)
+	if err != nil {
+		http.Error(w, "Registration failed: "+err.Error(), http.StatusInternalServerError)
+		log.Println("Error inserting user:", err)
+		return
+	}
+
+	// Registration successful
+	response := Response{Message: "Registration successful"}
+	jsonResponse, err := json.Marshal(response)
+	if err != nil {
+		http.Error(w, "Internal Server Error", http.StatusInternalServerError)
+		log.Println("Error encoding JSON response:", err)
+		return
+	}
+
+	w.Header().Set("Content-Type", "application/json")
+	w.WriteHeader(http.StatusCreated)
+	w.Write(jsonResponse)
 }

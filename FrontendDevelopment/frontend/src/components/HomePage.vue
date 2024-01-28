@@ -17,7 +17,7 @@ import Footer from "./../components/Footer.vue"
 
         <p>Don't have an account?</p>
         <div class="Button-Container2">
-            <router-link to="/UserRegistration" class="button">Register as User</router-link>
+            <router-link to="/UserRegistrationTesting" class="button">Register as User</router-link>
             <router-link to="/admin-register" class="button">Register as Admin</router-link>
         </div>
         

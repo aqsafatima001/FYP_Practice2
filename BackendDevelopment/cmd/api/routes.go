@@ -24,13 +24,19 @@ func (app *application) routes() http.Handler {
 		MaxAge:           300,
 	}))
 
+	// LOGIN REQUESTS
 	mux.Get("/", app.serveLogin)
 	mux.Post("/", app.serveLogin)
-
 	mux.Get("/api/userlogin", app.UserloginAPI)
 	mux.Post("/api/userlogin", app.UserloginAPI)
-
 	mux.Post("/api/adminlogin", app.AdminloginAPI)
 
+	// USER REGISTRATION REQUESTS
+	mux.Get("/api/user-registration", app.serveUserRegistrationPage)
+	mux.Post("/api/user-registration", app.registerUser)
+
+	//OTP-Working
+	mux.Get("/api/otp-verfication", app.OTP_verfication)
+	mux.Post("/api/otp-verfication", app.OTP_verfication)
 	return mux
 }

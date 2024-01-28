@@ -5,6 +5,9 @@ import AdminLogin from "./../components/AdminLogin.vue"
 import NextPage from "./../components/NextPage.vue"
 import HomePage from "./../components/HomePage.vue"
 import UserRegistration from "./../components/UserRegistration.vue"
+import UserRegistrationTesting from "./../components/UserRegistrationTesting.vue"
+import UserRegistrationTesting2 from "./../components/UserRegistrationTesting2.vue"
+import OtpVerification from "./../components/OtpVerification.vue"
 import UserDashboard from "./../components/UserDashboard.vue"
 import AdminDashboard from "./../components/AdminDashboard.vue"
 // import HomePage from "./..components/HomePage.vue"
@@ -27,6 +30,21 @@ const router  = createRouter({
             path: "/UserRegistration",
             name: "UserRegistration",
             component: UserRegistration
+        },
+        {
+            path: "/UserRegistrationTesting",
+            name: "UserRegistrationTesting",
+            component: UserRegistrationTesting
+        },
+        {
+            path: "/UserRegistrationTesting2",
+            name: "UserRegistrationTesting2",
+            component: UserRegistrationTesting2
+        },
+        {
+            path: "/OtpVerification",
+            name: "OtpVerification",
+            component: OtpVerification
         },
         {
             path:"/adminlogin",
