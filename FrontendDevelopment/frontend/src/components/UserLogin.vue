@@ -14,7 +14,7 @@
                                 name="email" 
                                 required="true" 
                                 label="Email"
-                                placeholder="abc@xyz.com"
+                                placeholder="Enter your Email here..."
                                 :autocomplete="name + '-new'" 
                             >
                         
@@ -25,8 +25,7 @@
                                 name="password" 
                                 required="true" 
                                 label="Password"
-                                placeholder="Enter your password"
-                                :autocomplete="name + '-new'" 
+                                placeholder="Enter your password..."
                             >
                     <hr />
                     <!-- <input type="submit" class="btn btn-primary" value="Login" /> -->

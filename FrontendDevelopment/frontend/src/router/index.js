@@ -10,6 +10,7 @@ import UserRegistrationTesting2 from "./../components/UserRegistrationTesting2.v
 import OtpVerification from "./../components/OtpVerification.vue"
 import UserDashboard from "./../components/UserDashboard.vue"
 import AdminDashboard from "./../components/AdminDashboard.vue"
+import RegistrationSuccess from "./../components/RegistrationSuccess.vue"
 // import HomePage from "./..components/HomePage.vue"
 // import Login from "./../components/Login.vue"
 
@@ -65,6 +66,11 @@ const router  = createRouter({
             path:"/admindashboard",
             name:"AdminDashboard",
             component: AdminDashboard
+        },
+        {
+            path:"/registration-success",
+            name:"RegistrationSuccess",
+            component:RegistrationSuccess
         }
     ]
 })
