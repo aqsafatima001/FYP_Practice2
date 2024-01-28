@@ -17,11 +17,9 @@
   
   <style scoped>
   .container {
-    display: flex;
-    flex-direction: column;
-    /*justify-content: center; */
-    align-items: center; 
-    height: 100vh; /* Make the container full height of the viewport */
+    margin-top: 200px;
+    align-content: center;
+    justify-content: center;
   }
 
   .request_resources-button{
@@ -36,6 +34,7 @@
     cursor: pointer;
     transition: background-color 0.3s ease, color 0.3s ease;
     margin-top: 25px;
+    margin-left: 500px;
     width: 20%
   }
   .request_resources-button:hover{
