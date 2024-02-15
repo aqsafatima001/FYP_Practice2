@@ -22,7 +22,6 @@
                         v-model="formData.email" 
                         required 
                         placeholder="Enter your Email here"
-                        :autocomplete="name + '-new'" 
                     />
              
                 <label for="password">Password:</label>
