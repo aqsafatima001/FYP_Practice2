@@ -80,7 +80,8 @@ export default {
                         console.log("ERROR: ", data.message)
                     } else {
                         console.log(data)
-                        this.$router.push('/userdashboard');
+                        // this.$router.push('/userdashboard');
+                        this.$router.push('/UserCreationInCluster');
                     }
                 })
                 .catch((error) => {

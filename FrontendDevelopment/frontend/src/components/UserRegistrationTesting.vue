@@ -14,6 +14,12 @@
                         v-model="formData.username" 
                         required 
                     />
+
+
+                    <!-- -------------------------------------------------------------------- -->
+
+
+                     <!-- -------------------------------------------------------------------- -->
              
                 <label for="email">Email:</label>
                     <input 
@@ -32,6 +38,21 @@
                         required 
                         placeholder="Enter your password"
                     />
+
+                      <!-- CAPTCHA CODE -->
+                      <div>
+                        <label>Enter Captcha:</label>
+                        <!-- <p>Enter Captcha:</p> -->
+                        <div id="Catcha_Boxes">
+                              <input type="text" id="mainCaptcha" readonly="readonly" />
+                              <i id="refresh" class="fa fa-refresh fa-spin" style="font-size:24px"  @click="generateCaptcha"></i>
+                              <input type="text" id="txtinput" v-model="captchaInput" />
+                              <!-- <input type="button" id="Button1" value="Check" @click="checkValidCaptcha" /> -->
+                              <span id="error" style="color:red">{{ captchaError }}</span>
+                              <span id="success" style="color:green">{{ captchaSuccess }}</span>
+                            </div>
+                      </div>
+                      <!-- CAPTCHA CODE  -->
               
                 <button type="submit" class="submit-button">Send OTP</button>
               </div>
@@ -45,13 +66,10 @@
 
 </template>
 
-  
+
 <script>
 export default {
   name: 'registration',
-  components: {
-
-  },
   data() {
     return {
       formData: {
@@ -59,10 +77,18 @@ export default {
         email: '',
         password: '',
       },
+      captchaInput: '',
+      captchaError: '',
+      captchaSuccess: '',
     };
   },
   methods: {
     async registerUser() {
+      // Check if captcha is valid before proceeding
+      if (!this.checkValidCaptcha()) {
+        return; // Stop execution if captcha is not valid
+      }
+
       try {
         const response = await fetch('http://localhost:8090/api/otp-verfication', {
           method: 'POST',
@@ -110,10 +136,45 @@ export default {
       }
     },
 
+    generateCaptcha() {
+      const cap = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz';
+      let code = '';
 
+      for (let i = 0; i < 4; i++) {
+        code += cap[Math.floor(Math.random() * cap.length)];
+      }
+
+      document.getElementById("mainCaptcha").value = code;
+    },
+
+    checkValidCaptcha() {
+      const string1 = this.removeSpaces(document.getElementById('mainCaptcha').value);
+      const string2 = this.removeSpaces(this.captchaInput);
+
+      if (string1 === string2) {
+        this.captchaSuccess = "Form is validated Successfully";
+        // alert("Form is validated Successfully");
+        // window.location = "https://www.youtube.com/c/buzz2daytech/";
+        return true;
+      } else {
+        this.captchaError = "Please Enter a Valid Captcha";
+        return false;
+      }
+    },
+
+    removeSpaces(string) {
+      return string.split(' ').join('');
+    },
+  },
+
+  mounted() {
+    // Call generateCaptcha on component mount
+    this.generateCaptcha();
   },
 };
 </script>
+
+
   
 
 
@@ -182,4 +243,140 @@ input[type="password"] {
   background-color: #0056b3;
   /* Change to your preferred hover background color */
 }
+
+
+
+/* Styling for Captcha Text */
+
+#Catcha_Boxes{
+  display: flex;
+}
+#mainCaptcha {
+  font-family: 'Monotype Corsiva', cursive;
+  font-size: 26px;
+  color: #009688;
+  width: 150px;
+  height: 35px;
+  text-align: center;
+}
+
+#txtinput{
+  width: 150px;
+  height: 35px;
+  text-align: center;
+  font-size: 26px;
+}
+
+#refresh{
+  margin-left: 10px;
+  margin-right: 10px;
+}
+
+
+
+
+.input-captcha {
+  padding: 5px;
+  border-radius: 5px;
+  width: 100%;
+  box-sizing: border-box;
+  font-family: 'Monotype Corsiva', cursive; /* Use your preferred font family */
+  font-size: 18px;
+}
+
+
+#error {
+  color: red;
+}
+
+#success {
+  color: green;
+}
+
 </style>
+
+
+
+
+
+
+
+
+
+
+
+<!--   
+<script>
+
+
+export default {
+  name: 'registration',
+  components: {
+
+  },
+  data() {
+    return {
+      formData: {
+        username: '',
+        email: '',
+        password: '',
+      },
+    };
+  },
+  methods: {
+
+
+
+
+    async registerUser() {
+      try {
+        const response = await fetch('http://localhost:8090/api/otp-verfication', {
+          method: 'POST',
+          headers: {
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify(this.formData),
+        });
+
+        if (response.status === 201) {
+          // Registration successful, redirect to email verification page
+          this.$router.push({
+            name: 'OtpVerification',
+            query: {
+              email: this.formData.email,
+              password: this.formData.password,
+              username: this.formData.username,
+            },
+          });
+        } else {
+          if (response.headers.get('content-type').indexOf('application/json') === -1) {
+            // Response is not JSON, handle it accordingly
+            alert('Non-JSON response from the server');
+          } else {
+            try {
+              // Attempt to parse the response as JSON
+              const data = await response.json();
+
+              // Check if data is valid JSON and contains a message
+              if (data && data.message) {
+                alert(data.message);
+              } else {
+                // Handle unexpected JSON response
+                alert('Unexpected JSON response from the server');
+              }
+            } catch (error) {
+              // Handle JSON parsing error
+              alert('Error parsing JSON response from the server');
+            }
+          }
+        }
+      } catch (error) {
+        console.error(error);
+        alert('An error occurred during registration.');
+      }
+    },
+
+
+  },
+};
+</script> -->

@@ -23,6 +23,9 @@ type application struct {
 	db       *sql.DB
 	infoLog  *log.Logger
 	errorLog *log.Logger
+
+	//--------------------------------------------
+	//sshClient *SSHClient // Add SSHClient to application
 }
 
 func NewApplication(config config, db *sql.DB, infoLog, errorLog *log.Logger) *application {
@@ -58,6 +61,9 @@ func main() {
 	errorLog := log.New(os.Stdout, "ERROR\t", log.Ldate|log.Ltime|log.Lshortfile)
 
 	app := NewApplication(cfg, db, infoLog, errorLog)
+
+	//--------------------------------
+	// app.sshClient = sshClient // Assign SSHClient to application
 
 	// Serve
 	err = app.serve()

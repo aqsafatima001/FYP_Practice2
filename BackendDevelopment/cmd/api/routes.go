@@ -35,11 +35,30 @@ func (app *application) routes() http.Handler {
 	// mux.Get("/api/user-registration", app.serveUserRegistrationPage)
 	// mux.Post("/api/user-registration", app.registerUser)
 
-	//OTP-Working
+	//User_OTP-Working + Registration APIs
 	mux.Get("/api/otp-verfication", app.OTP_verfication)
 	mux.Post("/api/otp-verfication", app.OTP_verfication)
 
 	mux.Get("/api/verify-otp", app.VerifyOTP)
 	mux.Post("/api/verify-otp", app.VerifyOTP)
+
+	//Admin_OTP-Working + Registration APIs
+	mux.Get("/api/admin-otp-verfication", app.Admin_OTP_verfication)
+	mux.Post("/api/admin-otp-verfication", app.Admin_OTP_verfication)
+
+	mux.Get("/api/admin-verify-otp", app.Admin_VerifyOTP)
+	mux.Post("/api/admin-verify-otp", app.Admin_VerifyOTP)
+
+	//Pending User Requests API
+	mux.Get("/api/getPendingRequests", app.getPendingRequestsHandler)
+	mux.Post("/api/getPendingRequests", app.getPendingRequestsHandler)
+
+	// Adjust your router initialization to use these handlers
+	mux.Post("/api/acceptRequest", app.acceptRequestHandler)
+	mux.Post("/api/declineRequest", app.declineRequestHandler)
+
+	// Api for user Creation in CENTOS Machine
+	mux.Post("/api/createUserInCentOS", app.createUserInCentOS)
+
 	return mux
 }

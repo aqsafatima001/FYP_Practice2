@@ -101,7 +101,7 @@ import Footer from "../components/Footer.vue"
             <!-- Add more thesis fields here -->
 
             <!-- Services Information -->
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label>Services:</label><br>
                 <input type="checkbox" id="hadoop" name="hadoop"> Hadoop<br>
                 <input type="checkbox" id="hive" name="hive"> Hive<br>
@@ -114,14 +114,13 @@ import Footer from "../components/Footer.vue"
                 <input type="checkbox" id="Kafka" name="Kafka"> Kafka<br>
                 <input type="checkbox" id="Flume" name="Flume"> Flume<br>
                 <input type="checkbox" id="Storm" name="Storm"> Storm<br>
-                <!-- Add more service checkboxes here -->
-            </div>
+            </div> -->
 
             <!-- Affiliation Information -->
-            <div class="form-group">
+            <!-- <div class="form-group">
                 <label for="xyzid">XYZ ID:</label>
                 <input type="text" id="xyzid" name="xyzid">
-            </div>
+            </div> -->
 
             <!-- Proof of Affiliation (Picture Upload) -->
             <div class="form-group">

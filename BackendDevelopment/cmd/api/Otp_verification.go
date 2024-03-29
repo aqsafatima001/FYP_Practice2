@@ -6,7 +6,18 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
+
+// FUNCTION FOR PASSWORD HASHING
+func (app *application) hashPassword(password string) (string, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(hashedPassword), nil
+}
 
 func (app *application) OTP_verfication(w http.ResponseWriter, r *http.Request) {
 	// Set the Content-Type header to indicate JSON response
@@ -118,12 +129,21 @@ func (app *application) verifyOTP(email, otp string) (time.Time, error) {
 
 // Separate function for user registration
 func (app *application) registerUser(username, email, password string) error {
+
+	hashedPassword, err_hashp := app.hashPassword(password)
+
+	if err_hashp != nil {
+		return err_hashp
+	}
+
+	// hashedPassword := password
+
 	insertUserQuery := `
-		INSERT INTO User_Registration_test (Username, Email, PasswordHash)
+		INSERT INTO User_Registration_pending (Username, Email, PasswordHash)
 		VALUES (@Username, @Email, @PasswordHash)
 	`
 
-	_, err := app.db.Exec(insertUserQuery, sql.Named("Username", username), sql.Named("Email", email), sql.Named("PasswordHash", password))
+	_, err := app.db.Exec(insertUserQuery, sql.Named("Username", username), sql.Named("Email", email), sql.Named("PasswordHash", hashedPassword))
 	if err != nil {
 		return err
 	}

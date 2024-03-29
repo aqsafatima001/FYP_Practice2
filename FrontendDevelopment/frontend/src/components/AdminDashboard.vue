@@ -22,8 +22,9 @@ export default {
             </div>
 
             <div class="header-items">
-                <!-- <div class="header-item">Dashboard</div>
-                <div class="header-item">Services</div>
+                <div ><router-link to="/PendingUserRequest" class="button">Pending Requests</router-link></div>
+                
+                <!-- <div class="header-item">Services</div>
                 <div class="header-item">Alerts</div>
                 <div class="header-item">Stack Version</div> -->
             </div>
@@ -179,6 +180,22 @@ export default {
     padding: 10px;
     text-align: center;
     background-color: rgb(229, 228, 226);
+}
+
+.button {
+    display: inline-block;
+    text-decoration: none;
+    color: #1a0799;
+    background-color: #27496D;
+    /* You can choose your preferred color */
+    background-color: #ffffff;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.button:hover {
+    background-color: #0056b3;
+    /* Change the color on hover if you like */
 }
 
 .footer {

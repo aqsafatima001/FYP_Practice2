@@ -6,9 +6,20 @@ import (
 	"fmt"
 	"net/http"
 	"time"
+
+	"golang.org/x/crypto/bcrypt"
 )
 
-func (app *application) OTP_verfication(w http.ResponseWriter, r *http.Request) {
+// FUNCTION FOR PASSWORD HASHING
+func (app *application) Admin_hashPassword(password string) (string, error) {
+	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(password), bcrypt.DefaultCost)
+	if err != nil {
+		return "", err
+	}
+	return string(hashedPassword), nil
+}
+
+func (app *application) Admin_OTP_verfication(w http.ResponseWriter, r *http.Request) {
 	// Set the Content-Type header to indicate JSON response
 	w.Header().Set("Content-Type", "application/json")
 	fmt.Println("Response Content-Type:", w.Header().Get("Content-Type"))
@@ -67,7 +78,7 @@ func (app *application) OTP_verfication(w http.ResponseWriter, r *http.Request) 
 	w.Write(jsonResponse)
 }
 
-func (app *application) VerifyOTP(w http.ResponseWriter, r *http.Request) {
+func (app *application) Admin_VerifyOTP(w http.ResponseWriter, r *http.Request) {
 	// Parse the JSON data sent from the frontend
 	var formData struct {
 		Email    string `json:"email"`
@@ -82,7 +93,7 @@ func (app *application) VerifyOTP(w http.ResponseWriter, r *http.Request) {
 	}
 
 	// Check OTP and email in the database
-	expirationTime, err := app.verifyOTP(formData.Email, formData.OTP)
+	expirationTime, err := app.Admin_verifyOTP(formData.Email, formData.OTP)
 	if err != nil {
 		fmt.Println("Error verifying OTP:", err)
 		http.Error(w, "Invalid OTP or OTP expired", http.StatusUnauthorized)
@@ -90,7 +101,7 @@ func (app *application) VerifyOTP(w http.ResponseWriter, r *http.Request) {
 	}
 	fmt.Println(expirationTime)
 	// OTP is valid, proceed to user registration
-	if err := app.registerUser(formData.Username, formData.Email, formData.Password); err != nil {
+	if err := app.Admin_registerUser(formData.Username, formData.Email, formData.Password); err != nil {
 		fmt.Println("Error registering the user:", err)
 		http.Error(w, "Error registering the user", http.StatusInternalServerError)
 		return
@@ -100,7 +111,7 @@ func (app *application) VerifyOTP(w http.ResponseWriter, r *http.Request) {
 }
 
 // Separate function for OTP verification
-func (app *application) verifyOTP(email, otp string) (time.Time, error) {
+func (app *application) Admin_verifyOTP(email, otp string) (time.Time, error) {
 	query := `
         SELECT ExpirationTime
         FROM OTPTable
@@ -117,13 +128,22 @@ func (app *application) verifyOTP(email, otp string) (time.Time, error) {
 }
 
 // Separate function for user registration
-func (app *application) registerUser(username, email, password string) error {
+func (app *application) Admin_registerUser(username, email, password string) error {
+
+	hashedPassword, err_hashp := app.Admin_hashPassword(password)
+
+	if err_hashp != nil {
+		return err_hashp
+	}
+
+	// hashedPassword := password
+
 	insertUserQuery := `
-		INSERT INTO User_Registration_test (Username, Email, PasswordHash)
+		INSERT INTO Admin_Registration_pending (Username, Email, PasswordHash)
 		VALUES (@Username, @Email, @PasswordHash)
 	`
 
-	_, err := app.db.Exec(insertUserQuery, sql.Named("Username", username), sql.Named("Email", email), sql.Named("PasswordHash", password))
+	_, err := app.db.Exec(insertUserQuery, sql.Named("Username", username), sql.Named("Email", email), sql.Named("PasswordHash", hashedPassword))
 	if err != nil {
 		return err
 	}
