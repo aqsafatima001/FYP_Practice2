@@ -3,6 +3,7 @@ package main
 import (
 	"database/sql"
 	"encoding/json"
+	"fmt"
 	"net/http"
 
 	"golang.org/x/crypto/bcrypt"
@@ -167,7 +168,7 @@ func (app *application) serveUserRegistrationPage(w http.ResponseWriter, r *http
 
 func (app *application) getPendingRequestsHandler(w http.ResponseWriter, r *http.Request) {
 	// Query pending user requests from the database
-	rows, err := app.db.Query("SELECT email, username FROM User_Registration_pending")
+	rows, err := app.db.Query("SELECT email, username FROM User_Registration_pending_2")
 	if err != nil {
 		http.Error(w, err.Error(), http.StatusInternalServerError)
 		return
@@ -196,6 +197,82 @@ func (app *application) getPendingRequestsHandler(w http.ResponseWriter, r *http
 	}
 }
 
+func (app *application) getUserInfoHandler(w http.ResponseWriter, r *http.Request) {
+	email := r.URL.Query().Get("email")
+
+	// Prepare the SQL statement with a placeholder for the email parameter
+	stmt, err := app.db.Prepare("SELECT * FROM User_Registration_pending_2 WHERE Email = @Email")
+	if err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+	defer stmt.Close()
+
+	// Execute the prepared statement with the email parameter
+	row := stmt.QueryRow(sql.Named("Email", email))
+
+	// Define variables to store column values
+	var (
+		UserID            int
+		Username          string
+		Email             string
+		PasswordHash      string
+		NCP_ID            sql.NullInt64
+		DateOfBirth       sql.NullString
+		Nationality       sql.NullString
+		NIC_Number        sql.NullString
+		Passport_Number   sql.NullString
+		Title             sql.NullString
+		FirstName         sql.NullString
+		MiddleName        sql.NullString
+		LastName          sql.NullString
+		University_Centre sql.NullString
+		ThesisTitle       sql.NullString
+		StartDate         sql.NullString
+		EndDate           sql.NullString
+		PictureProof      []byte // Assuming PictureProof is of type []byte
+	)
+
+	// Scan the row into variables
+	err = row.Scan(&UserID, &Username, &Email, &PasswordHash, &NCP_ID, &DateOfBirth, &Nationality, &NIC_Number,
+		&Passport_Number, &Title, &FirstName, &MiddleName, &LastName, &University_Centre, &ThesisTitle, &StartDate,
+		&EndDate, &PictureProof)
+	if err != nil {
+		http.Error(w, "Error scanning row: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Create a map containing user information
+	userInfo := map[string]interface{}{
+		"UserID":            UserID,
+		"Username":          Username,
+		"Email":             Email,
+		"PasswordHash":      PasswordHash,
+		"NCP_ID":            NCP_ID.Int64,       // Use NCP_ID.Int64 to get the int64 value
+		"DateOfBirth":       DateOfBirth.String, // Use DateOfBirth.String to get the string value
+		"Nationality":       Nationality.String,
+		"NIC_Number":        NIC_Number.String,
+		"Passport_Number":   Passport_Number.String,
+		"Title":             Title.String,
+		"FirstName":         FirstName.String,
+		"MiddleName":        MiddleName.String,
+		"LastName":          LastName.String,
+		"University_Centre": University_Centre.String,
+		"ThesisTitle":       ThesisTitle.String,
+		"StartDate":         StartDate.String,
+		"EndDate":           EndDate.String,
+		// Convert PictureProof to a base64 encoded string or any other appropriate representation
+		// You may also want to handle nil values in nullable columns if necessary
+	}
+
+	// Convert userInfo to JSON and write it to the response
+	w.Header().Set("Content-Type", "application/json")
+	if err := json.NewEncoder(w).Encode(userInfo); err != nil {
+		http.Error(w, "Error encoding JSON: "+err.Error(), http.StatusInternalServerError)
+		return
+	}
+}
+
 func (app *application) acceptRequestHandler(w http.ResponseWriter, r *http.Request) {
 	var requestData struct {
 		Email string `json:"email"`
@@ -205,11 +282,45 @@ func (app *application) acceptRequestHandler(w http.ResponseWriter, r *http.Requ
 		return
 	}
 
-	acceptUserQuery := `
-        INSERT INTO User_Registration_test (Username, Email, PasswordHash)
-        SELECT Username, Email, PasswordHash FROM User_Registration_pending WHERE Email = @Email;
+	// ------------------------------------------------------------------------------------------
+	// Retrieve user information from pending registration table
+	getUserQuery := `
+        SELECT Username FROM User_Registration_pending_2 WHERE Email = @Email;
+    `
+	row := app.db.QueryRow(getUserQuery, sql.Named("Email", requestData.Email))
 
-        DELETE FROM User_Registration_pending WHERE Email = @Email;
+	var userInfo struct {
+		Username string
+	}
+	if err := row.Scan(&userInfo.Username); err != nil {
+		http.Error(w, err.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Call function to create user on CentOS machine using the retrieved user information
+	err_createuser := app.createUserOnCentOS(userInfo.Username, "aqsafatima")
+	if err_createuser != nil {
+		http.Error(w, err_createuser.Error(), http.StatusInternalServerError)
+		return
+	}
+
+	// Send EMail to User that his request for Account Creation has been accepted
+	email := requestData.Email // Update with recipient's email
+	username := userInfo.Username
+	if errEmail := app.sendEmailAcceptRequest(email, username); errEmail != nil {
+		fmt.Println("Error sending email:", errEmail)
+		http.Error(w, "Error sending email", http.StatusInternalServerError)
+		return
+	}
+	fmt.Println("Email sent successfully")
+
+	// ------------------------------------------------------------------------------------------
+
+	acceptUserQuery := `
+		INSERT INTO User_Registration_test_2 (Username, Email, PasswordHash, NCP_ID, DateOfBirth, Nationality, NIC_Number, Passport_Number, Title, FirstName, MiddleName, LastName, University_Centre, ThesisTitle, StartDate, EndDate, PictureProof)
+        SELECT Username, Email, PasswordHash, NCP_ID, DateOfBirth, Nationality, NIC_Number, Passport_Number, Title, FirstName, MiddleName, LastName, University_Centre, ThesisTitle, StartDate, EndDate, PictureProof FROM User_Registration_pending_2 WHERE Email = @Email;
+
+        DELETE FROM User_Registration_pending_2 WHERE Email = @Email;
     `
 
 	_, err := app.db.Exec(acceptUserQuery, sql.Named("Email", requestData.Email))
@@ -231,8 +342,17 @@ func (app *application) declineRequestHandler(w http.ResponseWriter, r *http.Req
 		return
 	}
 
+	// Send EMail to User that his request for Account Creation has been REJECTED
+	email := requestData.Email // Update with recipient's email
+	if errEmail := app.sendEmailRejectRequest(email); errEmail != nil {
+		fmt.Println("Error sending email:", errEmail)
+		http.Error(w, "Error sending email", http.StatusInternalServerError)
+		return
+	}
+	fmt.Println("Email sent successfully")
+
 	declineUserQuery := `
-        DELETE FROM User_Registration_pending WHERE Email = @Email;
+        DELETE FROM User_Registration_pending_2 WHERE Email = @Email;
     `
 
 	_, err := app.db.Exec(declineUserQuery, sql.Named("Email", requestData.Email))

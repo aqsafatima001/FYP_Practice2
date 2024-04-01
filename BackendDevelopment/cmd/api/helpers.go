@@ -5,10 +5,8 @@ import (
 	"encoding/base32"
 	"encoding/json"
 	"errors"
-	"fmt"
 	"io"
 	"net/http"
-	"net/smtp"
 )
 
 // -------------- READ JSON FUNCTION ------------
@@ -80,32 +78,4 @@ func (app *application) generateOTP() (string, error) {
 	// Encode the random bytes to a 6-digit numeric OTP
 	otp := base32.StdEncoding.WithPadding(base32.NoPadding).EncodeToString(randomBytes)
 	return otp[:6], nil
-}
-
-func (app *application) sendEmailWithOTP(email, otp string) error {
-	// Set up authentication credentials
-	auth := smtp.PlainAuth(
-		"",
-		"aqsafatima0202@gmail.com",
-		"bgyn xcsk yfeb ajkz",
-		"smtp.gmail.com",
-	)
-	// Compose the email message
-	msg := []byte("To: " + email + "\r\n" +
-		"Subject: OTP Verification\r\n" +
-		"\r\n" +
-		"Your OTP for registration is: " + otp + "\r\n")
-	to := email
-	err := smtp.SendMail(
-		"smtp.gmail.com:587",
-		auth,
-		"aqsafatima0202@gmail.com",
-		[]string{to},
-		[]byte(msg),
-	)
-	if err != nil {
-		fmt.Printf("Error: ", err)
-	}
-	fmt.Println("Email sent successfully")
-	return nil
 }

@@ -148,5 +148,7 @@ func (app *application) registerUser(username, email, password string) error {
 		return err
 	}
 
+	// Send EMail to User that his request for Account Creation Request has been send to Admin
+
 	return nil
 }

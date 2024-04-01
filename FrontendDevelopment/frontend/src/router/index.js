@@ -20,6 +20,9 @@ import PendingUserRequest from "./../components/PendingUserRequest.vue"
 // USER CREATION IN CLUSTER
 import UserCreationInCluster from "./../components/UserCreationInCluster/UserCreationInCluster.vue";
 
+import UserRegistrationTesting2 from "./../components/UserRegistrationTesting2.vue"
+import OtpVerificationWithAdditionalInformation from "./../components/OtpVerificationWithAdditionalInformation.vue"
+
 const router  = createRouter({
     history: createWebHistory(import.meta.env.BASE_URL),
     routes:[
@@ -52,6 +55,11 @@ const router  = createRouter({
             path: "/OtpVerification",
             name: "OtpVerification",
             component: OtpVerification
+        },
+        {
+            path: "/OtpVerificationWithAdditionalInformation",
+            name: "OtpVerificationWithAdditionalInformation",
+            component: OtpVerificationWithAdditionalInformation
         },
         {
             path: "/AdminOtpVerification",
@@ -94,7 +102,15 @@ const router  = createRouter({
             path:"/UserCreationInCluster",
             name:"UserCreationInCluster",
             component:UserCreationInCluster
-        }
+        },
+
+
+
+        {
+            path: "/UserRegistrationTesting2",
+            name: "UserRegistrationTesting2",
+            component: UserRegistrationTesting2
+        },
     ]
 })
 

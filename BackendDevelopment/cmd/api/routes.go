@@ -58,7 +58,16 @@ func (app *application) routes() http.Handler {
 	mux.Post("/api/declineRequest", app.declineRequestHandler)
 
 	// Api for user Creation in CENTOS Machine
-	mux.Post("/api/createUserInCentOS", app.createUserInCentOS)
+	// mux.Post("/api/createUserInCentOS", app.createUserInCentOS)
 
+	//User registration With Additional Information
+	mux.Get("/api/otp-verfication-user-additonal-info", app.OTP_verfication_User_additional_Info)
+	mux.Post("/api/otp-verfication-user-additonal-info", app.OTP_verfication_User_additional_Info)
+
+	mux.Get("/api/verify-otp-user-additonal-info", app.VerifyOTP_User_additional_Info)
+	mux.Post("/api/verify-otp-user-additonal-info", app.VerifyOTP_User_additional_Info)
+
+	mux.Get("/api/getUserInfo", app.getUserInfoHandler)
+	// mux.Post("/api/getUserInfo", app.getUserInfoHandler)
 	return mux
 }
